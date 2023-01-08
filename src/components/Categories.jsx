@@ -11,7 +11,7 @@ function Categories() {
                     <li
                         key={category}
                         onClick={() => setActiveIndex(idx)}
-                        className={activeIndex === idx && 'active'}
+                        className={activeIndex === idx ? 'active' : ''}
                     >{category}</li>)}
             </ul>
         </div>
