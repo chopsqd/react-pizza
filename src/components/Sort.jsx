@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 function Sort() {
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(false)
     const [selected, setSelected] = useState(0)
 
     const list = ['популярности', 'цене', 'алфавиту']
