@@ -2,12 +2,14 @@
 
 .sort {
   position: relative;
+
   &__label {
     display: flex;
     align-items: center;
 
     svg {
       margin-right: 8px;
+      cursor: pointer;
     }
 
     b {
