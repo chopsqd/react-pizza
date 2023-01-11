@@ -15,6 +15,8 @@ const Home = ({searchValue}) => {
     })
     const [orderType, setOrderType] = useState(true);
 
+    const [currentPage, setCurrentPage] = useState(1);
+
     useEffect(() => {
         setIsLoading(true)
         fetch(`https://63bbfb2fcf99234bfa6aa932.mockapi.io/items?limit=4&page=${currentPage}&${categoryId ? `category=${categoryId}` : ''}&sortBy=${sortType.sortProperty}&order=${orderType ? 'desc' : 'asc'}${searchValue ? `&search=${searchValue}` : ''}`)
@@ -39,6 +41,7 @@ const Home = ({searchValue}) => {
                     : pizzas.map(pizza => <PizzaBlock key={pizza.id} {...pizza}/>)
                 }
             </div>
+            <Pagination setCurrentPage={(number) => setCurrentPage(number)}/>
         </div>
     );
 };
