@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
+import axios from 'axios'
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
@@ -25,12 +26,12 @@ const Home = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        fetch(`https://63bbfb2fcf99234bfa6aa932.mockapi.io/items?limit=4&page=${currentPage}&${categoryId ? `category=${categoryId}` : ''}&sortBy=${sort.sortProperty}&order=${orderType ? 'desc' : 'asc'}${searchValue ? `&search=${searchValue}` : ''}`)
-            .then(res => res.json())
-            .then(json => {
-                setPizzas(json)
+        axios.get(`https://63bbfb2fcf99234bfa6aa932.mockapi.io/items?limit=4&page=${currentPage}&${categoryId ? `category=${categoryId}` : ''}&sortBy=${sort.sortProperty}&order=${orderType ? 'desc' : 'asc'}${searchValue ? `&search=${searchValue}` : ''}`)
+            .then(res => {
+                setPizzas(res.data)
                 setIsLoading(false)
             })
+
         window.scrollTo(0, 0)
     }, [categoryId, sort, orderType, searchValue, currentPage])
 
