@@ -2,7 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 
 // Изначальное состояние
 const initialState = {
-    value: 0,
+    categoryId: 0,
+    sort: {
+        name: 'популярности',
+        sortProperty: 'rating'
+    }
 }
 
 // Создаем slice / логика обработки состояния
@@ -11,14 +15,19 @@ export const filterSlice = createSlice({
     name: 'filter',
     // initialState: initialState ( const initialState = { ... } )
     initialState,
-    // Методы изменения состояния
+    // Методы (Actions) изменения состояния
     reducers: {
-
+        setCategoryId(state, action) {
+            state.categoryId = action.payload
+        },
+        setSort(state, action) {
+            state.sort = action.payload
+        }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { } = filterSlice.actions
+export const { setCategoryId, setSort } = filterSlice.actions
 
 // filterSlice.reducer отвечает за изменение состояния
 export default filterSlice.reducer

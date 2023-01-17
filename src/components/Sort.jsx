@@ -1,6 +1,10 @@
 import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setSort} from "../redux/slices/filterSlice";
 
-function Sort({selected, setSelected, orderType, setOrderType}) {
+function Sort({orderType, setOrderType}) {
+    const dispatch = useDispatch()
+    const sort = useSelector(state => state.filter.sort)
     const [open, setOpen] = useState(false)
 
     const list = [
@@ -9,8 +13,8 @@ function Sort({selected, setSelected, orderType, setOrderType}) {
         {name: 'алфавиту', sortProperty: 'title'}
     ]
 
-    const toggleSelectedItem = (index) => {
-        setSelected(index)
+    const toggleSelectedItem = (item) => {
+        dispatch(setSort(item))
         setOpen(false)
     }
 
@@ -24,14 +28,14 @@ function Sort({selected, setSelected, orderType, setOrderType}) {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={() => setOpen(!open)}>{selected.name}</span>
+                <span onClick={() => setOpen(!open)}>{sort.name}</span>
             </div>
             {open && <div className="sort__popup">
                 <ul>
                     {list.map((item, index) =>
                         <li
                             key={index}
-                            className={selected.sortProperty === item.sortProperty ? 'active' : ''}
+                            className={sort.sortProperty === item.sortProperty ? 'active' : ''}
                             onClick={() => toggleSelectedItem(item)}
                         >{item.name}</li>
                     )}
