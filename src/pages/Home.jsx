@@ -8,13 +8,14 @@ import Pagination from "../components/Pagination";
 import {AppContext} from "../App";
 import {setCategoryId, setCurrentPage} from '../redux/slices/filterSlice'
 import {useDispatch, useSelector} from "react-redux";
+import {setItems} from "../redux/slices/pizzaSlice";
 
 const Home = () => {
     const dispatch = useDispatch()
     const {categoryId, sort, currentPage} = useSelector(state => state.filter)
+    const {items} = useSelector(state => state.pizza)
 
     const {searchValue} = useContext(AppContext)
-    const [pizzas, setPizzas] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
     const onChangeCategory = (id) => {
@@ -31,8 +32,12 @@ const Home = () => {
         setIsLoading(true)
         axios.get(`https://63bbfb2fcf99234bfa6aa932.mockapi.io/items?limit=4&page=${currentPage}&${categoryId ? `category=${categoryId}` : ''}&sortBy=${sort.sortProperty}&order=${orderType ? 'desc' : 'asc'}${searchValue ? `&search=${searchValue}` : ''}`)
             .then(res => {
-                setPizzas(res.data)
+                dispatch(setItems(res.data))
                 setIsLoading(false)
+            })
+            .catch(err =>  {
+                setIsLoading(false)
+                console.log('SERVER ERROR: ', err)
             })
 
         window.scrollTo(0, 0)
@@ -48,7 +53,7 @@ const Home = () => {
             <div className="content__items">
                 {isLoading
                     ? [...new Array(4)].map((_, index) => <Skeleton key={index}/>)
-                    : pizzas.map(pizza => <PizzaBlock key={pizza.id} {...pizza}/>)
+                    : items.map(pizza => <PizzaBlock key={pizza.id} {...pizza}/>)
                 }
             </div>
             <Pagination setCurrentPage={onChangePage}/>
