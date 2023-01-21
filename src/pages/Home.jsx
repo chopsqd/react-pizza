@@ -4,16 +4,14 @@ import Sort from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination";
-import {AppContext} from "../App";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchPizzas} from "../redux/slices/pizzaSlice";
+import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
+import {selectFilter} from "../redux/slices/filterSlice";
 
 const Home = () => {
     const dispatch = useDispatch()
-    const {categoryId, sort, currentPage, orderType} = useSelector(state => state.filter)
-    const {items, status} = useSelector(state => state.pizza)
-
-    const {searchValue} = useContext(AppContext)
+    const {categoryId, sort, currentPage, orderType, searchValue} = useSelector(selectFilter)
+    const {items, status} = useSelector(selectPizzaData)
 
     useEffect(() => {
         dispatch(fetchPizzas({categoryId, sort, currentPage, orderType, searchValue}))
