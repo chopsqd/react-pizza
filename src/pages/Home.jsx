@@ -1,44 +1,22 @@
-import React, {useContext, useEffect, useState} from 'react';
-import axios from 'axios'
+import React, {useContext, useEffect} from 'react';
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import PizzaBlock from "../components/PizzaBlock";
 import Pagination from "../components/Pagination";
 import {AppContext} from "../App";
-import {setCategoryId, setCurrentPage} from '../redux/slices/filterSlice'
 import {useDispatch, useSelector} from "react-redux";
-import {setItems} from "../redux/slices/pizzaSlice";
+import {fetchPizzas} from "../redux/slices/pizzaSlice";
 
 const Home = () => {
     const dispatch = useDispatch()
-    const {categoryId, sort, currentPage} = useSelector(state => state.filter)
-    const {items} = useSelector(state => state.pizza)
+    const {categoryId, sort, currentPage, orderType} = useSelector(state => state.filter)
+    const {items, status} = useSelector(state => state.pizza)
 
     const {searchValue} = useContext(AppContext)
-    const [isLoading, setIsLoading] = useState(true)
-
-    const onChangeCategory = (id) => {
-        dispatch(setCategoryId(id))
-    }
-
-    const onChangePage = (number) => {
-        dispatch(setCurrentPage(number))
-    }
-
-    const [orderType, setOrderType] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true)
-        axios.get(`https://63bbfb2fcf99234bfa6aa932.mockapi.io/items?limit=4&page=${currentPage}&${categoryId ? `category=${categoryId}` : ''}&sortBy=${sort.sortProperty}&order=${orderType ? 'desc' : 'asc'}${searchValue ? `&search=${searchValue}` : ''}`)
-            .then(res => {
-                dispatch(setItems(res.data))
-                setIsLoading(false)
-            })
-            .catch(err =>  {
-                setIsLoading(false)
-                console.log('SERVER ERROR: ', err)
-            })
+        dispatch(fetchPizzas({categoryId, sort, currentPage, orderType, searchValue}))
 
         window.scrollTo(0, 0)
     }, [categoryId, sort, orderType, searchValue, currentPage])
@@ -46,17 +24,22 @@ const Home = () => {
     return (
         <div className="container">
             <div className="content__top">
-                <Categories activeIndex={categoryId} setActiveIndex={onChangeCategory}/>
-                <Sort orderType={orderType} setOrderType={setOrderType}/>
+                <Categories/>
+                <Sort />
             </div>
             <h2 className="content__title">Все пиццы</h2>
-            <div className="content__items">
-                {isLoading
-                    ? [...new Array(4)].map((_, index) => <Skeleton key={index}/>)
-                    : items.map(pizza => <PizzaBlock key={pizza.id} {...pizza}/>)
-                }
-            </div>
-            <Pagination setCurrentPage={onChangePage}/>
+            {status === 'error'
+                ? <div style={{margin: 100, 'text-align': 'center'}}>
+                    <h2>Ошибка при загрузке данных с сервера, попробуйте позже 😕</h2>
+                </div>
+                : <div className="content__items">
+                    {status === 'loading'
+                        ? [...new Array(4)].map((_, index) => <Skeleton key={index}/>)
+                        : items.map(pizza => <PizzaBlock key={pizza.id} {...pizza}/>)
+                    }
+                </div>
+            }
+            <Pagination />
         </div>
     );
 };
