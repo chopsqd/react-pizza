@@ -2,10 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from "react-router-dom";
 import axios from "axios";
 
-const FullPizza = () => {
+const FullPizza: React.FC = () => {
     const {id} = useParams()
     const navigate = useNavigate()
-    const [pizza, setPizza] = useState()
+    const [pizza, setPizza] = useState<{
+        imageUrl: string
+        title: string
+        price: number
+    }>()
 
     const fetchOnePizza = async () => {
         try {
@@ -17,7 +21,7 @@ const FullPizza = () => {
             }
 
             setPizza(data[0])
-        } catch(error) {
+        } catch(error: any) {
             alert(`Ошибка при получении пиццы! (${error.message})`)
             navigate('/')
         }
