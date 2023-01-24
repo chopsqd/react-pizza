@@ -17,7 +17,6 @@ const Pagination = () => {
             onPageChange={event => dispatch(setCurrentPage(event.selected + 1))}
             pageRangeDisplayed={4}
             pageCount={3}
-            renderOnZeroPageCount={null}
         />
     );
 };

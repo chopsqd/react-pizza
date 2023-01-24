@@ -2,25 +2,30 @@ import {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {selectFilter, setOrderType, setSort} from "../redux/slices/filterSlice";
 
+type ListItemType = {
+    name: string
+    sortProperty: string
+}
+
 function Sort() {
     const dispatch = useDispatch()
     const {sort, orderType} = useSelector(selectFilter)
-    const [open, setOpen] = useState(false)
-    const sortRef= useRef()
+    const [open, setOpen] = useState<boolean>(false)
+    const sortRef = useRef<HTMLDivElement>(null)
 
-    const list = [
+    const list: ListItemType[] = [
         {name: 'популярности', sortProperty: 'rating'},
         {name: 'цене', sortProperty: 'price'},
         {name: 'алфавиту', sortProperty: 'title'}
     ]
 
-    const toggleSelectedItem = (item) => {
+    const toggleSelectedItem = (item: ListItemType) => {
         dispatch(setSort(item))
         setOpen(false)
     }
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
+        const handleClickOutside = (event: any) => {
             let path = event.composedPath().includes(sortRef.current)
             if (!path) setOpen(false)
         };
