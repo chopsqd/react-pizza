@@ -1,8 +1,8 @@
-import React from "react";
+import React, {memo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {selectFilter, setCategoryId} from "../redux/slices/filterSlice";
 
-const Categories: React.FC = () => {
+const Categories: React.FC = memo(() => {
     const dispatch = useDispatch()
     const {categoryId} = useSelector(selectFilter)
 
@@ -20,6 +20,6 @@ const Categories: React.FC = () => {
             </ul>
         </div>
     )
-}
+})
 
 export default Categories

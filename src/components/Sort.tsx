@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {memo, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {selectFilter, setOrderType, setSort} from "../redux/slices/filterSlice";
 
@@ -7,7 +7,7 @@ type ListItemType = {
     sortProperty: 'rating' | 'title' | 'price'
 }
 
-function Sort() {
+const Sort: React.FC = memo(() => {
     const dispatch = useDispatch()
     const {sort, orderType} = useSelector(selectFilter)
     const [open, setOpen] = useState<boolean>(false)
@@ -62,6 +62,6 @@ function Sort() {
             </div>}
         </div>
     )
-}
+})
 
 export default Sort;
